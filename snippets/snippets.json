@@ -1,1 +1,126 @@
+{
+  "variables": {
+    "lang": "nl",
+    "locale": "nl-BE",
+    "charset": "UTF-8",
+    "indentation": "\t",
+    "newline": "\n"
+  },
+  "css": {
+  "filters": "css",
+  "profile": "css",
+  "snippets": {
+    "min-break-ml": "@media all and (min-width: 480px) {\n\t${0}\n}",
+    "min-break-ts": "@media all and (min-width: 768px) {\n\t${0}\n}",
+    "min-break-tl": "@media all and (min-width: 992px) {\n\t${0}\n}",
+    "min-break-la": "@media all and (min-width: 1280px) {\n\t${0}\n}",
+    "min-break-de": "@media all and (min-width: 1920px) {\n\t${0}\n}",
 
+    "max-break-ml": "@media all and (max-width: 480px) {\n\t${0}\n}",
+    "max-break-ts": "@media all and (max-width: 768px) {\n\t${0}\n}",
+    "max-break-tl": "@media all and (max-width: 992px) {\n\t${0}\n}",
+    "max-break-la": "@media all and (max-width: 1280px) {\n\t${0}\n}",
+
+    "d": "display:${1:block};",
+    "d:n": "display:none;",
+    "d:b": "display:block;",
+    "d:f": "display:flex;",
+    "d:if": "display:inline-flex;",
+    "d:g": "display:grid;",
+
+    "pos": "position:${1:relative};",
+    "t": "top:|;", "r": "right:|;", "b": "bottom:|;", "l": "left:|;",
+    "z": "z-index:|;",
+    "bxz:bb": "box-sizing:border-box;",
+
+    "m": "margin:|;", "mt": "margin-top:|;", "mr": "margin-right:|;",
+    "mb": "margin-bottom:|;", "ml": "margin-left:|;",
+    "p": "padding:|;", "pt": "padding-top:|;", "pr": "padding-right:|;",
+    "pb": "padding-bottom:|;", "pl": "padding-left:|;",
+
+    "w": "width:|;", "h": "height:|;",
+    "maw": "max-width:|;", "miw": "min-width:|;", "mih": "min-height:|;",
+    "ov": "overflow:${1:hidden};",
+
+    "fx": "flex:${1:0} ${2:1} ${3:auto};",
+    "fxd": "flex-direction:${1:row};",
+    "fxw": "flex-wrap:${1:wrap};",
+    "jc": "justify-content:${1:center};",
+    "ai": "align-items:${1:center};",
+    "gap": "gap:${1:1rem};", "rgap": "row-gap:${1:1rem};", "cgap": "column-gap:${1:1rem};",
+
+    "gtc": "grid-template-columns:${1:repeat(12,1fr)};",
+    "gtr": "grid-template-rows:${1:auto};",
+
+    "trs": "transition:${1:all} ${2:0.3s} ${3:ease};",
+    "c": "color:#${1:000};",
+    "bgc": "background-color:#${1:fff};",
+    "fz": "font-size:${1:clamp(1rem,2vw,1.125rem)};",
+    "fw": "font-weight:${1:600};",
+    "lh": "line-height:${1:1.5};"
+  }
+},
+"html": {
+  "filters": "html",
+  "profile": "html",
+  "snippets": {
+    "schema-lokaal-bedrijf": "<script type=\"application/ld+json\">\\n{\\n  \\\"@context\\\": \\\"https://schema.org\\\",\\n  \\\"@type\\\": \\\"LocalBusiness\\\",\\n  \\\"name\\\": \\\"${1:Bedrijfsnaam}\\\",\\n  \\\"url\\\": \\\"${2:https://www.voorbeeld.be}\\\",\\n  \\\"telephone\\\": \\\"${3:+32 3 000 00 00}\\\",\\n  \\\"image\\\": [\\\"${4:https://www.voorbeeld.be/hero.jpg}\\\"],\\n  \\\"address\\\": {\\\"@type\\\": \\\"PostalAddress\\\", \\\"streetAddress\\\": \\\"${5:Straat 1}\\\", \\\"addressLocality\\\": \\\"${6:Antwerpen}\\\", \\\"postalCode\\\": \\\"${7:2000}\\\", \\\"addressCountry\\\": \\\"BE\\\"},\\n  \\\"openingHoursSpecification\\\": [{\\\"@type\\\": \\\"OpeningHoursSpecification\\\", \\\"dayOfWeek\\\": [\\\"Monday\\\", \\\"Tuesday\\\", \\\"Wednesday\\\", \\\"Thursday\\\", \\\"Friday\\\"], \\\"opens\\\": \\\"${8:08:00}\\\", \\\"closes\\\": \\\"${9:18:00}\\\"}]\\n}\\n</script>${0}",
+
+    "schema-dienst": "<script type=\"application/ld+json\">\\n{\\n  \\\"@context\\\": \\\"https://schema.org\\\",\\n  \\\"@type\\\": \\\"Service\\\",\\n  \\\"name\\\": \\\"${1:Dienstnaam}\\\",\\n  \\\"serviceType\\\": \\\"${2:Type}\\\",\\n  \\\"provider\\\": {\\\"@type\\\": \\\"LocalBusiness\\\", \\\"name\\\": \\\"${3:Bedrijf}\\\"},\\n  \\\"areaServed\\\": {\\\"@type\\\": \\\"Place\\\", \\\"name\\\": \\\"${4:Regio}\\\"},\\n  \\\"offers\\\": {\\\"@type\\\": \\\"Offer\\\", \\\"price\\\": \\\"${5:129.00}\\\", \\\"priceCurrency\\\": \\\"EUR\\\"}\\n}\\n</script>${0}",
+
+    "schema-artikel": "<script type=\"application/ld+json\">\\n{\\n  \\\"@context\\\": \\\"https://schema.org\\\",\\n  \\\"@type\\\": \\\"Article\\\",\\n  \\\"mainEntityOfPage\\\": {\\\"@type\\\": \\\"WebPage\\\", \\\"@id\\\": \\\"${1:https://www.voorbeeld.be/blog/slug}\\\"},\\n  \\\"headline\\\": \\\"${2:Titel}\\\",\\n  \\\"image\\\": [\\\"${3:https://www.voorbeeld.be/cover.jpg}\\\"],\\n  \\\"datePublished\\\": \\\"${4:2025-09-03}\\\",\\n  \\\"dateModified\\\": \\\"${5:2025-09-03}\\\",\\n  \\\"author\\\": {\\\"@type\\\": \\\"Person\\\", \\\"name\\\": \\\"${6:Auteur}\\\"},\\n  \\\"publisher\\\": {\\\"@type\\\": \\\"Organization\\\", \\\"name\\\": \\\"${7:Merk}\\\", \\\"logo\\\": {\\\"@type\\\": \\\"ImageObject\\\", \\\"url\\\": \\\"${8:https://www.voorbeeld.be/logo.png}\\\"}}\\n}\\n</script>${0}",
+
+    "schema-product": "<script type=\"application/ld+json\">\\n{\\n  \\\"@context\\\": \\\"https://schema.org\\\",\\n  \\\"@type\\\": \\\"Product\\\",\\n  \\\"name\\\": \\\"${1:Productnaam}\\\",\\n  \\\"image\\\": [\\\"${2:https://www.voorbeeld.be/product.jpg}\\\"],\\n  \\\"description\\\": \\\"${3:Korte beschrijving}\\\",\\n  \\\"sku\\\": \\\"${4:SKU}\\\",\\n  \\\"brand\\\": {\\\"@type\\\": \\\"Brand\\\", \\\"name\\\": \\\"${5:Merk}\\\"},\\n  \\\"offers\\\": {\\\"@type\\\": \\\"Offer\\\", \\\"url\\\": \\\"${6:https://www.voorbeeld.be/product}\\\", \\\"priceCurrency\\\": \\\"${7:EUR}\\\", \\\"price\\\": \\\"${8:99.00}\\\", \\\"availability\\\": \\\"https://schema.org/${9:InStock}\\\"}\\n}\\n</script>${0}",
+
+    "schema-recensie": "<script type=\\\"application/ld+json\\\">\\n{\\n  \\\"@context\\\": \\\"https://schema.org\\\",\\n  \\\"@type\\\": \\\"Product\\\",\\n  \\\"name\\\": \\\"${1:Productnaam}\\\",\\n  \\\"aggregateRating\\\": {\\\"@type\\\": \\\"AggregateRating\\\", \\\"ratingValue\\\": \\\"${2:4.7}\\\", \\\"reviewCount\\\": \\\"${3:128}\\\"}\\n}\\n</script>${0}",
+
+    "schema-faq": "<script type=\"application/ld+json\">\\n{\\n  \\\"@context\\\": \\\"https://schema.org\\\",\\n  \\\"@type\\\": \\\"FAQPage\\\",\\n  \\\"mainEntity\\\": [\\n    {\\\"@type\\\": \\\"Question\\\", \\\"name\\\": \\\"${1:Vraag 1?}\\\", \\\"acceptedAnswer\\\": {\\\"@type\\\": \\\"Answer\\\", \\\"text\\\": \\\"${2:Antwoord 1.}\\\"}},\\n    {\\\"@type\\\": \\\"Question\\\", \\\"name\\\": \\\"${3:Vraag 2?}\\\", \\\"acceptedAnswer\\\": {\\\"@type\\\": \\\"Answer\\\", \\\"text\\\": \\\"${4:Antwoord 2.}\\\"}}\\n  ]\\n}\\n</script>${0}",
+
+    "schema-breadcrumbs": "<script type=\"application/ld+json\">\\n{\\n  \\\"@context\\\": \\\"https://schema.org\\\",\\n  \\\"@type\\\": \\\"BreadcrumbList\\\",\\n  \\\"itemListElement\\\": [\\n    {\\\"@type\\\": \\\"ListItem\\\", \\\"position\\\": 1, \\\"name\\\": \\\"${1:Home}\\\", \\\"item\\\": \\\"${2:https://www.voorbeeld.be}\\\"},\\n    {\\\"@type\\\": \\\"ListItem\\\", \\\"position\\\": 2, \\\"name\\\": \\\"${3:Pagina}\\\", \\\"item\\\": \\\"${4:https://www.voorbeeld.be/pagina}\\\"}\\n  ]\\n}\\n</script>${0}",
+
+    "schema-organisatie": "<script type=\"application/ld+json\">\\n{\\n  \\\"@context\\\": \\\"https://schema.org\\\",\\n  \\\"@type\\\": \\\"Organization\\\",\\n  \\\"name\\\": \\\"${1:Bedrijfsnaam}\\\",\\n  \\\"url\\\": \\\"${2:https://www.voorbeeld.be}\\\",\\n  \\\"logo\\\": \\\"${3:https://www.voorbeeld.be/logo.png}\\\",\\n  \\\"sameAs\\\": [\\\"${4:https://www.facebook.com/voorbeeld}\\\", \\\"${5:https://www.instagram.com/voorbeeld}\\\"]\\n}\\n</script>${0}",
+
+    "schema-website-zoek": "<script type=\"application/ld+json\">\\n{\\n  \\\"@context\\\": \\\"https://schema.org\\\",\\n  \\\"@type\\\": \\\"WebSite\\\",\\n  \\\"url\\\": \\\"${1:https://www.voorbeeld.be}\\\",\\n  \\\"name\\\": \\\"${2:Merk}\\\",\\n  \\\"potentialAction\\\": {\\n    \\\"@type\\\": \\\"SearchAction\\\",\\n    \\\"target\\\": \\\"${3:https://www.voorbeeld.be/zoeken?q={search_term_string}}\\\",\\n    \\\"query-input\\\": \\\"required name=search_term_string\\\"\\n  }\\n}\\n</script>${0}",
+
+    "schema-persoon": "<script type=\"application/ld+json\">\\n{\\n  \\\"@context\\\": \\\"https://schema.org\\\",\\n  \\\"@type\\\": \\\"Person\\\",\\n  \\\"name\\\": \\\"${1:Naam}\\\",\\n  \\\"image\\\": \\\"${2:https://www.voorbeeld.be/author.jpg}\\\",\\n  \\\"jobTitle\\\": \\\"${3:Functie}\\\",\\n  \\\"worksFor\\\": {\\\"@type\\\": \\\"Organization\\\", \\\"name\\\": \\\"${4:Organisatie}\\\"}\\n}\\n</script>${0}",
+
+    "schema-video": "<script type=\"application/ld+json\">\\n{\\n  \\\"@context\\\": \\\"https://schema.org\\\",\\n  \\\"@type\\\": \\\"VideoObject\\\",\\n  \\\"name\\\": \\\"${1:Videotitel}\\\",\\n  \\\"description\\\": \\\"${2:Korte beschrijving}\\\",\\n  \\\"thumbnailUrl\\\": [\\\"${3:https://www.voorbeeld.be/thumb.jpg}\\\"],\\n  \\\"uploadDate\\\": \\\"${4:2025-08-20}\\\",\\n  \\\"duration\\\": \\\"${5:PT2M}\\\",\\n  \\\"embedUrl\\\": \\\"${6:https://player.example.com/abc}\\\"\\n}\\n</script>${0}",
+
+    "schema-evenement": "<script type=\"application/ld+json\">\\n{\\n  \\\"@context\\\": \\\"https://schema.org\\\",\\n  \\\"@type\\\": \\\"Event\\\",\\n  \\\"name\\\": \\\"${1:Evenement}\\\",\\n  \\\"startDate\\\": \\\"${2:2025-10-05T15:00}\\\",\\n  \\\"endDate\\\": \\\"${3:2025-10-05T17:00}\\\",\\n  \\\"location\\\": {\\\"@type\\\": \\\"Place\\\", \\\"name\\\": \\\"${4:Locatie}\\\", \\\"address\\\": {\\\"@type\\\": \\\"PostalAddress\\\", \\\"addressLocality\\\": \\\"${5:Stad}\\\", \\\"addressCountry\\\": \\\"BE\\\"}},\\n  \\\"offers\\\": {\\\"@type\\\": \\\"Offer\\\", \\\"price\\\": \\\"${6:8.00}\\\", \\\"priceCurrency\\\": \\\"EUR\\\"}\\n}\\n</script>${0}",
+
+    "seo:base": "<meta charset=\\\"UTF-8\\\">\\n<meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1\\\">\\n<title>${1:Pagina titel} — ${2:Merk}</title>\\n<meta name=\\\"description\\\" content=\\\"${3:Korte, wervende samenvatting (≤155 tekens)}\\\">\\n<link rel=\\\"canonical\\\" href=\\\"${4:https://www.voorbeeld.be/pad}\\\">\\n<meta name=\\\"robots\\\" content=\\\"index,follow\\\">",
+
+    "seo:og": "<meta property=\\\"og:title\\\" content=\\\"${1:Pagina titel}\\\">\\n<meta property=\\\"og:description\\\" content=\\\"${2:Samenvatting}\\\">\\n<meta property=\\\"og:type\\\" content=\\\"${3:website}\\\">\\n<meta property=\\\"og:url\\\" content=\\\"${4:https://www.voorbeeld.be/pad}\\\">\\n<meta property=\\\"og:image\\\" content=\\\"${5:https://www.voorbeeld.be/og.jpg}\\\">\\n<meta property=\\\"og:site_name\\\" content=\\\"${6:Merk}\\\">\\n<meta property=\\\"og:locale\\\" content=\\\"${7:nl_BE}\\\">",
+
+    "seo:tw": "<meta name=\\\"twitter:card\\\" content=\\\"summary_large_image\\\">\\n<meta name=\\\"twitter:title\\\" content=\\\"${1:Pagina titel}\\\">\\n<meta name=\\\"twitter:description\\\" content=\\\"${2:Samenvatting}\\\">\\n<meta name=\\\"twitter:image\\\" content=\\\"${3:https://www.voorbeeld.be/social.jpg}\\\">",
+
+    "seo:fav": "<link rel=\\\"apple-touch-icon\\\" sizes=\\\"180x180\\\" href=\\\"${1:/apple-touch-icon.png}\\\">\\n<link rel=\\\"icon\\\" type=\\\"image/png\\\" sizes=\\\"32x32\\\" href=\\\"${2:/favicon-32x32.png}\\\">\\n<link rel=\\\"icon\\\" type=\\\"image/png\\\" sizes=\\\"16x16\\\" href=\\\"${3:/favicon-16x16.png}\\\">\\n<link rel=\\\"manifest\\\" href=\\\"${4:/site.webmanifest}\\\">\\n<meta name=\\\"theme-color\\\" content=\\\"${5:#0ea5e9}\\\">",
+
+    "seo:hreflang": "<link rel=\\\"alternate\\\" href=\\\"${1:https://www.voorbeeld.be/nl/}\\\" hreflang=\\\"nl-be\\\">\\n<link rel=\\\"alternate\\\" href=\\\"${2:https://www.voorbeeld.be/fr/}\\\" hreflang=\\\"fr-be\\\">\\n<link rel=\\\"alternate\\\" href=\\\"${3:https://www.voorbeeld.be/en/}\\\" hreflang=\\\"en\\\">",
+
+    "seo:robots-sterk": "<meta name=\\\"robots\\\" content=\\\"index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1\\\">\\n<meta name=\\\"googlebot\\\" content=\\\"indexifembedded\\\">",
+
+    "meta:color-scheme": "<meta name=\\\"color-scheme\\\" content=\\\"light dark\\\">\\n<meta name=\\\"theme-color\\\" content=\\\"#ffffff\\\" media=\\\"(prefers-color-scheme: light)\\\">\\n<meta name=\\\"theme-color\\\" content=\\\"#111827\\\" media=\\\"(prefers-color-scheme: dark)\\\">",
+
+    "perf:preconnect": "<link rel=\\\"preconnect\\\" href=\\\"${1:https://fonts.gstatic.com}\\\" crossorigin>\\n<link rel=\\\"dns-prefetch\\\" href=\\\"${2://cdn.example.com}\\\">",
+
+    "perf:preload-font": "<link rel=\\\"preload\\\" href=\\\"${1:/fonts/Inter-Var.woff2}\\\" as=\\\"font\\\" type=\\\"font/woff2\\\" crossorigin>\\n<style>@font-face{font-family:'${2:Inter}';src:url('${1:/fonts/Inter-Var.woff2}') format('woff2');font-display:swap;}</style>",
+
+    "perf:preload-css": "<link rel=\\\"preload\\\" href=\\\"${1:/css/styles.css}\\\" as=\\\"style\\\" onload=\\\"this.onload=null;this.rel='stylesheet'\\\">\\n<noscript><link rel=\\\"stylesheet\\\" href=\\\"${1:/css/styles.css}\\\"></noscript>",
+
+    "perf:preload-hero": "<link rel=\\\"preload\\\" as=\\\"image\\\" href=\\\"${1:/img/hero.jpg}\\\" imagesrcset=\\\"${2:/img/hero@2x.jpg} 2x\\\" fetchpriority=\\\"high\\\">",
+
+    "perf:defer-js": "<script src=\\\"${1:/js/app.js}\\\" defer></script>",
+    "perf:async-js": "<script src=\\\"${1:/js/vendor.js}\\\" async></script>",
+    "perf:modulepreload": "<link rel=\\\"modulepreload\\\" href=\\\"${1:/js/app.mjs}\\\">",
+
+    "perf:lazy-img": "<img src=\\\"${1:/img/foto.jpg}\\\" alt=\\\"${2:Alt-tekst}\\\" loading=\\\"lazy\\\" decoding=\\\"async\\\" width=\\\"${3:800}\\\" height=\\\"${4:600}\\\">",
+    "perf:lazy-iframe": "<iframe src=\\\"${1:https://www.youtube.com/embed/ID}\\\" title=\\\"${2:Video}\\\" loading=\\\"lazy\\\" referrerpolicy=\\\"no-referrer-when-downgrade\\\" allowfullscreen></iframe>",
+    "perf:noscript-img": "<noscript><img src=\\\"${1:/img/foto.jpg}\\\" alt=\\\"${2:Alt-tekst}\\\"></noscript>",
+    "perf:critical-css": "<style>${1:/* plak hier critical CSS */}</style>",
+
+    "a11y:skiplink": "<a class=\\\"skip-to-content\\\" href=\\\"#main\\\">${1:Sla naar inhoud over}</a>",
+    "img:lcp": "<img src=\\\"${1:/img/hero.jpg}\\\" alt=\\\"${2:Heldere beschrijving}\\\" width=\\\"${3:1200}\\\" height=\\\"${4:800}\\\" fetchpriority=\\\"high\\\" decoding=\\\"async\\\" loading=\\\"eager\\\">"
+  }
+}
+}
