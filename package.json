@@ -1,17 +1,17 @@
 {
-    "title": "Name of the extension",
-    "name": "github-<owner>-<repo>",
-    "description": "A sample extension.",
+    "title": "tdpsnippets",
+    "name": "github-toby13dp-tdpsnippets",
+    "description": "mijn eigen snippets.",
     "version": "0.0.1",
     "license": "MIT",
-    "author": "your name (https://github.com/<your github id>)",
-    "homepage": "<project web page url or this github repo url if no website available>",
+    "author": "toby13dp (https://github.com/toby13dp)",
+    "homepage": "https://github.com/toby13dp/tdpsnippets",
     "engines": {
         "brackets": ">=2.0.0"
     },
-    "categories": "demo",
+    "categories": "snippets",
     "keywords": [
-        "phcode", "extension", "demo"
+        "snippets"
     ],
     "files": [
         "main.js"

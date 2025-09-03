@@ -1,44 +1,57 @@
-/*global define, brackets, $ */
-
-// See detailed docs in https://docs.phcode.dev/api/creating-extensions
-
-// A good place to look for code examples for extensions: https://github.com/phcode-dev/phoenix/tree/main/src/extensions/default
-
-// A simple extension that adds an entry in "file menu> hello world"
 define(function (require, exports, module) {
-    "use strict";
+  const AppInit            = brackets.getModule("utils/AppInit");
+  const FileSystem         = brackets.getModule("filesystem/FileSystem");
+  const ExtensionUtils     = brackets.getModule("utils/ExtensionUtils");
+  const PreferencesManager = brackets.getModule("preferences/PreferencesManager");
+  const CommandManager     = brackets.getModule("command/CommandManager");
+  const Menus              = brackets.getModule("command/Menus");
 
-    // Brackets modules
-    const AppInit = brackets.getModule("utils/AppInit"),
-        DefaultDialogs = brackets.getModule("widgets/DefaultDialogs"),
-        Dialogs = brackets.getModule("widgets/Dialogs"),
-        CommandManager = brackets.getModule("command/CommandManager"),
-        Menus = brackets.getModule("command/Menus");
+  const CMD_ID   = "toby.emmetSnippets.install";
+  const CMD_NAME = "Installeer Emmet-snippets (NL)";
 
-    // Function to run when the menu item is clicked
-    function handleHelloWorld() {
-        Dialogs.showModalDialog(
-            DefaultDialogs.DIALOG_ID_INFO,
-            "hello",
-            "world"
-        );
-    }
-    
-      // First, register a command - a UI-less object associating an id to a handler
-    var MY_COMMAND_ID = "helloworld.sayhello";   // package-style naming to avoid collisions
-    CommandManager.register("Hello World", MY_COMMAND_ID, handleHelloWorld);
+  function ensureDir(dirPath, cb) {
+    const dir = FileSystem.getDirectoryForPath(dirPath);
+    dir.create(err => cb && cb(err && err !== "AlreadyExists" ? err : null));
+  }
 
-    // Then create a menu item bound to the command
-    // The label of the menu item is the name we gave the command (see above)
-    var menu = Menus.getMenu(Menus.AppMenuBar.FILE_MENU);
-    menu.addMenuItem(MY_COMMAND_ID);
-    
-    // We could also add a key binding at the same time:
-    //menu.addMenuItem(MY_COMMAND_ID, "Ctrl-Alt-W");
-    // (Note: "Ctrl" is automatically mapped to "Cmd" on Mac)
-    
-    // Initialize extension once shell is finished initializing.
-    AppInit.appReady(function () {
-        console.log("hello world");
-    });
+  function writeFile(targetPath, contents, cb) {
+    const file = FileSystem.getFileForPath(targetPath);
+    file.write(contents, cb);
+  }
+
+  function installSnippets() {
+    // 1) Kies je gewenste gebruikersmap
+    const userDir = "C:/Users/tobyd/EmmetCustom".replace(/\\/g, "/");
+    const target  = userDir + "/snippets.json";
+
+    // 2) Lees bundel-bestand
+    return ExtensionUtils.loadFile(module, "snippets/snippets.json")
+      .then(text => new Promise((resolve, reject) => {
+        ensureDir(userDir, err => {
+          if (err) { reject(err); return; }
+          writeFile(target, text, err2 => err2 ? reject(err2) : resolve());
+        });
+      }))
+      .then(() => {
+        // 3) Update Emmet-instelling
+        // NB: 'emmet' is de extensie-prefix; dit schrijft naar de globale prefs.
+        const emmetPrefs = PreferencesManager.getExtensionPrefs("emmet");
+        const current = emmetPrefs.get("extensionsPath") || [];
+        const list = Array.isArray(current) ? current.slice() : [current];
+        if (!list.includes(userDir)) list.push(userDir);
+        emmetPrefs.set("extensionsPath", list);
+        emmetPrefs.save();
+        window.alert("Emmet-snippets geïnstalleerd. Herlaad Phoenix Code om ze te gebruiken.");
+      })
+      .catch(err => {
+        console.error("Installatie mislukt:", err);
+        window.alert("Kon snippets niet installeren. Check de console voor details.");
+      });
+  }
+
+  AppInit.appReady(function () {
+    CommandManager.register(CMD_NAME, CMD_ID, installSnippets);
+    const menu = Menus.getMenu(Menus.AppMenuBar.DEBUG_MENU);
+    if (menu) menu.addMenuItem(CMD_ID, Menus.LAST);
+  });
 });
