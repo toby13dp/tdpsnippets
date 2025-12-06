@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Klik, Gooi &amp; Scoor!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --accent: #f4b400;
+        --accent-strong: #ffdd4a;
+        --ink: #f6f6f6;
+        --muted: rgba(255, 255, 255, 0.65);
+        --panel: rgba(3, 6, 17, 0.65);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Chakra Petch", system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: var(--ink);
+        background: radial-gradient(circle at top, #152642 0%, #04070f 70%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(1rem, 2vw, 2.5rem);
+      }
+
+      .game-shell {
+        width: min(1200px, 100%);
+        background: linear-gradient(180deg, rgba(15, 33, 62, 0.95), rgba(6, 11, 23, 0.95));
+        border-radius: 32px;
+        box-shadow: 0 30px 120px rgba(0, 0, 0, 0.65);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .ui-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: clamp(1rem, 2vw, 2.5rem);
+        z-index: 2;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .title {
+        font-size: clamp(1.8rem, 4vw, 2.8rem);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        flex: 1 1 240px;
+        font-weight: 700;
+      }
+
+      .stats {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .stat {
+        background: var(--panel);
+        padding: 0.8rem 1.2rem;
+        border-radius: 18px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      .stat span {
+        display: block;
+        font-size: 1.9rem;
+        color: var(--accent-strong);
+        text-align: center;
+        letter-spacing: 0.02em;
+      }
+
+      canvas {
+        width: 100%;
+        display: block;
+        aspect-ratio: 16 / 9;
+      }
+
+      .hud-bottom {
+        position: absolute;
+        bottom: clamp(0.5rem, 1vw, 1rem);
+        left: clamp(1rem, 2vw, 2.5rem);
+        right: clamp(1rem, 2vw, 2.5rem);
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+      }
+
+      .time-bar {
+        width: 100%;
+        height: 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+      }
+
+      .time-bar__fill {
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #ff4d67, #ffb347, #ffe259);
+        transition: width 120ms ease;
+      }
+
+      .tips {
+        font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+        color: var(--muted);
+        line-height: 1.6;
+        backdrop-filter: blur(8px);
+        background: rgba(3, 6, 18, 0.65);
+        border-radius: 18px;
+        padding: 0.9rem 1.1rem;
+      }
+
+      .controls {
+        display: flex;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .primary-btn {
+        border: none;
+        align-self: flex-start;
+        padding: 0.85rem 1.8rem;
+        border-radius: 24px;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        background: linear-gradient(135deg, #ffa037, #ffe156);
+        color: #3a2300;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+        transition: transform 200ms ease;
+      }
+
+      .primary-btn:hover {
+        transform: translateY(-2px) scale(1.01);
+      }
+
+      .overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(4, 7, 15, 0.86);
+        color: var(--ink);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 1rem;
+        z-index: 3;
+        padding: 2rem;
+        transition: opacity 260ms ease;
+      }
+
+      .overlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .overlay h2 {
+        font-size: clamp(2rem, 5vw, 3rem);
+        margin: 0;
+      }
+
+      .overlay p {
+        color: var(--muted);
+        max-width: 540px;
+        margin: 0 auto;
+      }
+
+      .badge {
+        padding: 0.15rem 0.8rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.1);
+        font-size: 0.75rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+      }
+
+      @media (max-width: 720px) {
+        .ui-layer {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .stats {
+          width: 100%;
+          justify-content: space-between;
+        }
+        .stat {
+          flex: 1 1 120px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-shell">
+      <div class="ui-layer">
+        <div>
+          <div class="badge">Korfbal skills lab</div>
+          <div class="title">Klik, Gooi &amp; Scoor!</div>
+        </div>
+        <div class="stats">
+          <div class="stat">Score<span id="score">0</span></div>
+          <div class="stat">Beste ronde<span id="best">0</span></div>
+          <div class="stat">Ritme<span id="combo">x1</span></div>
+        </div>
+      </div>
+      <canvas id="court" width="1280" height="720" aria-label="Virtuele korfbaltraining"></canvas>
+      <div class="hud-bottom">
+        <div class="time-bar">
+          <div class="time-bar__fill" id="time-fill"></div>
+        </div>
+        <div class="tips">
+          Tik of klik om je bal omhoog te liften. Mik door naast de bal te tikken
+          en stuur hem door de korf. Scoor snel om je energie te boosten!
+        </div>
+        <div class="controls">Klik/Tap • Spatiebalk</div>
+        <button class="primary-btn" id="start-btn">Start training</button>
+      </div>
+      <div class="overlay" id="overlay">
+        <h2>Vind je ritme!</h2>
+        <p>
+          Korfbal is timing. Elk tikje geeft je bal een lift én een klein zetje in
+          de richting waarin je klikt. Scoor voordat je energiebalk leegloopt om
+          verder te trainen en verbeter voortdurend je beste score.
+        </p>
+        <button class="primary-btn" id="play-btn">Let's go!</button>
+      </div>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("court");
+      const ctx = canvas.getContext("2d");
+      const scoreEl = document.getElementById("score");
+      const bestEl = document.getElementById("best");
+      const comboEl = document.getElementById("combo");
+      const timeFill = document.getElementById("time-fill");
+      const playBtn = document.getElementById("play-btn");
+      const startBtn = document.getElementById("start-btn");
+      const overlay = document.getElementById("overlay");
+
+      let dpr = window.devicePixelRatio || 1;
+      function resize() {
+        const { width, height } = canvas.getBoundingClientRect();
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+      }
+      resize();
+      window.addEventListener("resize", () => {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        resize();
+      });
+
+      const floorHeight = 90;
+      const gravity = 2200;
+      const boost = -900;
+      const hoop = { x: 0, y: 0, width: 120 };
+      const ball = {
+        x: canvas.width / dpr / 2,
+        y: canvas.height / dpr - floorHeight - 30,
+        vx: 180,
+        vy: 0,
+        radius: 26,
+        spin: 0,
+        canScore: true,
+      };
+      let particles = [];
+
+      const state = {
+        running: false,
+        score: 0,
+        combo: 1,
+        best: Number(localStorage.getItem("kgscore") || 0),
+        timeLeft: 15,
+        maxTime: 20,
+        lastTime: 0,
+      };
+      bestEl.textContent = state.best;
+
+      function spawnHoop(firstRun = false) {
+        const width = canvas.width / dpr;
+        const height = canvas.height / dpr;
+        const marginX = 120;
+        const minY = height * 0.18;
+        const maxY = height * 0.55;
+        hoop.x = marginX + Math.random() * (width - marginX * 2);
+        hoop.y = minY + Math.random() * (maxY - minY);
+        hoop.width = 100 + Math.random() * 80;
+        if (!firstRun) {
+          particles.push(
+            ...Array.from({ length: 18 }, () => ({
+              x: hoop.x,
+              y: hoop.y,
+              vx: (Math.random() - 0.5) * 260,
+              vy: (Math.random() - 0.9) * 320,
+              life: 0.7 + Math.random() * 0.5,
+              color: Math.random() > 0.5 ? "#ffdd4a" : "#ffa037",
+              size: 3 + Math.random() * 5,
+            }))
+          );
+        }
+      }
+
+      function resetBall() {
+        const width = canvas.width / dpr;
+        const height = canvas.height / dpr;
+        ball.x = width / 2;
+        ball.y = height - floorHeight - ball.radius;
+        ball.vx = (Math.random() > 0.5 ? 1 : -1) * (140 + Math.random() * 80);
+        ball.vy = 0;
+        ball.spin = 0;
+        ball.canScore = true;
+      }
+
+      function startGame() {
+        resetBall();
+        spawnHoop(true);
+        state.score = 0;
+        state.combo = 1;
+        state.timeLeft = 15;
+        state.running = true;
+        state.lastTime = performance.now();
+        overlay.classList.add("hidden");
+        startBtn.textContent = "Training bezig";
+        startBtn.disabled = true;
+        requestAnimationFrame(loop);
+      }
+
+      function endGame(message = "Ritme verloren") {
+        state.running = false;
+        overlay.querySelector("h2").textContent = message;
+        overlay.querySelector("p").textContent =
+          "Je behaalde " + state.score + " doelpunten. Klik om opnieuw te starten.";
+        overlay.classList.remove("hidden");
+        startBtn.textContent = "Opnieuw";
+        startBtn.disabled = false;
+      }
+
+      function updateScore(points = 1) {
+        state.score += points;
+        scoreEl.textContent = state.score;
+        if (state.score > state.best) {
+          state.best = state.score;
+          bestEl.textContent = state.best;
+          localStorage.setItem("kgscore", state.best);
+        }
+        state.combo = Math.min(5, state.combo + 0.1);
+        comboEl.textContent = "x" + state.combo.toFixed(1);
+        state.timeLeft = Math.min(state.maxTime, state.timeLeft + 3);
+      }
+
+      function applyInput(clientX) {
+        if (!state.running) return;
+        const rect = canvas.getBoundingClientRect();
+        const width = canvas.width / dpr;
+        const height = canvas.height / dpr;
+        const relX = clientX === undefined ? ball.x : ((clientX - rect.left) / rect.width) * width;
+        const diff = relX - ball.x;
+        ball.vx += diff * 1.2;
+        ball.vx = Math.max(-450, Math.min(450, ball.vx));
+        ball.vy = boost;
+        ball.spin = Math.max(-8, Math.min(8, ball.spin + diff * 0.01));
+        state.timeLeft = Math.max(0, state.timeLeft - 0.15);
+      }
+
+      function updateParticles(dt) {
+        particles = particles.filter((p) => {
+          p.life -= dt;
+          if (p.life <= 0) return false;
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          p.vy += 600 * dt;
+          return true;
+        });
+      }
+
+      function drawParticles() {
+        ctx.save();
+        particles.forEach((p) => {
+          ctx.globalAlpha = Math.max(0, p.life);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
+        });
+        ctx.restore();
+      }
+
+      function drawCourt(width, height) {
+        const gradient = ctx.createLinearGradient(0, 0, 0, height);
+        gradient.addColorStop(0, "#091425");
+        gradient.addColorStop(0.55, "#11213c");
+        gradient.addColorStop(1, "#061124");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.fillStyle = "rgba(255,255,255,0.04)";
+        ctx.fillRect(0, height - floorHeight, width, floorHeight);
+        ctx.strokeStyle = "rgba(255, 211, 79, 0.35)";
+        ctx.lineWidth = 4;
+        ctx.strokeRect(60, height - floorHeight + 30, width - 120, floorHeight - 60);
+        ctx.beginPath();
+        ctx.arc(width / 2, height - floorHeight + 30, 140, Math.PI, 2 * Math.PI);
+        ctx.stroke();
+      }
+
+      function drawHoop() {
+        ctx.save();
+        ctx.translate(hoop.x, hoop.y);
+        ctx.fillStyle = "rgba(255,255,255,0.2)";
+        ctx.fillRect(-8, -110, 16, 120);
+        ctx.fillStyle = "#f4b400";
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = "#ffdf6c";
+        ctx.beginPath();
+        ctx.ellipse(0, 0, hoop.width / 2, 10, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(-hoop.width / 2, 0);
+        ctx.lineTo(-hoop.width / 2, 36);
+        ctx.moveTo(hoop.width / 2, 0);
+        ctx.lineTo(hoop.width / 2, 36);
+        ctx.stroke();
+        ctx.fillStyle = "rgba(255, 223, 108, 0.15)";
+        ctx.fillRect(-hoop.width / 2, 0, hoop.width, 36);
+        ctx.restore();
+      }
+
+      function drawBall() {
+        ctx.save();
+        ctx.translate(ball.x, ball.y);
+        ctx.rotate((ball.spin * Math.PI) / 180);
+        const ballGradient = ctx.createRadialGradient(-6, -6, 4, 0, 0, ball.radius);
+        ballGradient.addColorStop(0, "#fff2c1");
+        ballGradient.addColorStop(1, "#f4b400");
+        ctx.fillStyle = ballGradient;
+        ctx.beginPath();
+        ctx.arc(0, 0, ball.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.6)";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(0, 0, ball.radius * 0.65, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(0, 0, ball.radius * 0.35, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function loop(timestamp) {
+        if (!state.running) return;
+        const width = canvas.width / dpr;
+        const height = canvas.height / dpr;
+        const dt = Math.min(0.032, (timestamp - state.lastTime) / 1000);
+        state.lastTime = timestamp;
+
+        state.timeLeft -= dt;
+        timeFill.style.width = Math.max(0, (state.timeLeft / state.maxTime) * 100) + "%";
+        if (state.timeLeft <= 0) {
+          endGame("Je energie is op!");
+          return;
+        }
+
+        state.combo = Math.max(1, state.combo - dt * 0.2);
+        comboEl.textContent = "x" + state.combo.toFixed(1);
+
+        let prevY = ball.y;
+        ball.vy += gravity * dt;
+        ball.x += ball.vx * dt;
+        ball.y += ball.vy * dt;
+
+        if (ball.x < ball.radius) {
+          ball.x = ball.radius;
+          ball.vx = Math.abs(ball.vx) * 0.9;
+        } else if (ball.x > width - ball.radius) {
+          ball.x = width - ball.radius;
+          ball.vx = -Math.abs(ball.vx) * 0.9;
+        }
+
+        const floor = height - floorHeight - ball.radius;
+        if (ball.y > floor) {
+          ball.y = floor;
+          ball.vy = -Math.abs(ball.vy) * 0.55;
+          ball.spin *= 0.5;
+          ball.canScore = true;
+        }
+
+        if (prevY > hoop.y && ball.y <= hoop.y && Math.abs(ball.x - hoop.x) < hoop.width * 0.45 && ball.canScore) {
+          updateScore();
+          spawnHoop();
+          ball.canScore = false;
+        }
+
+        if (ball.y > hoop.y + 50) {
+          ball.canScore = true;
+        }
+
+        ball.spin *= 0.99;
+
+        updateParticles(dt);
+
+        ctx.clearRect(0, 0, width, height);
+        drawCourt(width, height);
+        drawParticles();
+        drawHoop();
+        drawBall();
+
+        requestAnimationFrame(loop);
+      }
+
+      canvas.addEventListener("pointerdown", (e) => {
+        applyInput(e.clientX);
+      });
+      window.addEventListener("keydown", (e) => {
+        if (e.code === "Space") {
+          e.preventDefault();
+          applyInput();
+        }
+      });
+
+      playBtn.addEventListener("click", startGame);
+      startBtn.addEventListener("click", () => {
+        if (!state.running) startGame();
+      });
+      overlay.addEventListener("click", () => {
+        if (!state.running) startGame();
+      });
+    </script>
+  </body>
+</html>
